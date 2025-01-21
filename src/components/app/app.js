@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import nextId from "react-id-generator";
 
 import AppInfo from '../app-info/app-info';
 import SearchPanel from '../search-panel/search-panel';
@@ -35,7 +34,7 @@ class App extends Component {
             name,
             salary,
             increase: false,
-            id: nextId()
+            id: this.maxId++
         }
         this.setState(({data}) => {
             const newArr = [...data, newItem]
