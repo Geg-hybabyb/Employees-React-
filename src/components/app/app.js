@@ -16,7 +16,9 @@ class App extends Component {
                 {name:'S.J.', salary: 5000, increase: true, rise: false, id: 1},
                 {name:'Max Weber', salary: 4500, increase: false, rise: true, id: 2},
                 {name:'Dima', salary: 2, increase: false, rise: false, id: 3}
-            ]
+            ],
+            term: '',
+            filter: 'all'
         }
         this.maxId = 4;
     }
@@ -55,9 +57,38 @@ class App extends Component {
         }))
     }
 
+    seartchVelue = (data, term) => {
+        if(term.length === 0) {
+            return data
+        }
+
+        return data.filter(item => item.name.indexOf(term) > -1)
+    }
+
+    onUpdateSeartch = (term) => {
+        this.setState({term})
+    }
+
+    onUpdateFilter = (filter) => {
+        this.setState({filter})
+    }
+
+    filterData = (data, filter) => {
+        switch(filter) {
+            case 'rise': 
+                return data.filter(item => item.rise);
+            case '<1000$': 
+                return data.filter(item => item.salary > 1000);
+            default:
+                return data;
+        }
+    }
+
     render() {
-        const employees = this.state.data.length;
-        const increase = this.state.data.filter(item => item.increase).length
+        const {data, term, filter} = this.state;
+        const employees = data.length;
+        const increase = data.filter(item => item.increase).length
+        const visibleData = this.seartchVelue(this.filterData(data, filter), term);
 
         return (
             <div className='app'>
@@ -66,12 +97,15 @@ class App extends Component {
                     increase={increase}/>
                 
                 <div className="search-panel">
-                    <SearchPanel />
-                    <AppFilter />
+                    <SearchPanel 
+                        onUpdateSeartch={this.onUpdateSeartch}/>
+                    <AppFilter 
+                        onUpdateFilter={this.onUpdateFilter}
+                        filter={filter}/>
                 </div>
     
                 <EmployeesList 
-                    data={this.state.data}
+                    data={visibleData}
                     onDeleteItem={this.onDeleteItem}
                     onToggleProp={this.onToggleProp} />
                 <EmployeesAddForms 
