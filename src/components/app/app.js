@@ -77,11 +77,24 @@ class App extends Component {
         switch(filter) {
             case 'rise': 
                 return data.filter(item => item.rise);
-            case '<1000$': 
+            case '>1000$': 
                 return data.filter(item => item.salary > 1000);
             default:
                 return data;
         }
+    }
+
+    onUpdateSalary = (salary, id) => {
+        console.log(salary);
+        this.setState(({data}) => {
+            data.map(item => {
+                if(item.id === id) {
+                    return item.salary = salary
+                } else {
+                    return item
+                }
+            })
+        })
     }
 
     render() {
@@ -107,7 +120,8 @@ class App extends Component {
                 <EmployeesList 
                     data={visibleData}
                     onDeleteItem={this.onDeleteItem}
-                    onToggleProp={this.onToggleProp} />
+                    onToggleProp={this.onToggleProp}
+                    onUpdateSalary={this.onUpdateSalary} />
                 <EmployeesAddForms 
                     onAdd={this.onAddNewItem}/>
             </div>
